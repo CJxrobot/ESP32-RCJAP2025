@@ -1,7 +1,7 @@
 #include <Preferences.h>
 
 // ============================
-// Student Template: Average Calculation + EEPROM Storage
+// Student Template: Average Calculation + EEPROM Storage + Serial0 Commands
 // ============================
 
 // Number of sensors
@@ -21,11 +21,15 @@ uint16_t result[SENSOR_COUNT];
 // Preferences object for EEPROM storage
 Preferences memory;
 
+// Control flags
+bool averaging_active = false;
+
 // ============================
 // Setup
 // ============================
 void setup() {
-  Serial.begin(/* TODO: baud rate */);
+  Serial.begin(/* TODO: baud rate */);   // Debug
+  Serial0.begin(/* TODO: baud rate */);  // UART command interface
 
   // Initialize sensor pins
   for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
@@ -48,7 +52,6 @@ void setup() {
 // ============================
 void scan_sensors() {
   for (uint8_t i = 0; i < SENSOR_COUNT; i++) {
-    // TODO: read analog value
     uint16_t reading = /* TODO: analogRead(pin_config[i]) */;
 
     if (reading > max_val[i]) max_val[i] = reading;
@@ -83,10 +86,27 @@ void save_average() {
 // Loop
 // ============================
 void loop() {
-  // TODO: call scan_sensors() periodically
-  // TODO: call save_average() when needed
-  // e.g., after several scans or a button press
+  // ============================
+  // 1. Check Serial0 for commands
+  // ============================
+  if (Serial0.available() > 0) {
+    uint8_t command = Serial0.read();
+    if (command == 0xAA) {
+      averaging_active = true;
+      Serial.println("Start averaging");
+    } else if (command == 0xEE) {
+      averaging_active = false;
+      save_average();
+      Serial.println("Stop averaging and saved");
+    }
+  }
 
-  delay(/* TODO: delay ms */);
+  // ============================
+  // 2. Scan sensors if averaging active
+  // ============================
+  if (averaging_active) {
+    scan_sensors();
+  }
+
+  delay(/* TODO: loop delay in ms */);
 }
-
