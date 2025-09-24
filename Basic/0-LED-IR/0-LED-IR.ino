@@ -1,20 +1,46 @@
-// Example 0: LED + IR Reading + Serial Print
+// ============================
+// Example 0 Template: LED + Serial + Serial0 UART
+// ============================
 
 #define LED_BUILTIN 2
-#define IR_COUNT 2
-int ir_pins[IR_COUNT] = {32, 33};  // two IR sensors
-int ir_values[IR_COUNT];
 
 void setup() {
+  // Initialize LED
   pinMode(LED_BUILTIN, OUTPUT);
-  Serial.begin(115200);  // Debug messages
+
+  // Initialize Serial for debugging
+  Serial.begin(/* TODO: baud rate */);
+
+  // Initialize Serial0 for UART sending
+  Serial0.begin(/* TODO: baud rate */);
+
+  Serial.println("Setup complete");
+  Serial0.println("Setup complete");
 }
 
 void loop() {
-  // Toggle LED
+  // ============================
+  // 1. Toggle LED
+  // ============================
   digitalWrite(LED_BUILTIN, HIGH);
-  delay(500);
+  delay(/* TODO: LED ON time in ms */);
   digitalWrite(LED_BUILTIN, LOW);
-  delay(500);
-  Serial.println("testing");
+  delay(/* TODO: LED OFF time in ms */);
+
+  // ============================
+  // 2. Print debug message to Serial
+  // ============================
+  Serial.println(/* TODO: message to print */);
+
+  // ============================
+  // 3. Send message over Serial0 (UART)
+  // ============================
+  Serial0.print(/* TODO: start marker, e.g., '$' */);
+  Serial0.print(/* TODO: message content */);
+  Serial0.println(/* TODO: end marker, e.g., '#' */);
+
+  // ============================
+  // 4. Optional delay before next loop
+  // ============================
+  delay(/* TODO: loop delay in ms */);
 }
