@@ -12,7 +12,9 @@ void setup() {
 
 void loop() {
   // Toggle LED
-  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-  Serial.println("testing");
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(500);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  Serial.println("testing");
 }
