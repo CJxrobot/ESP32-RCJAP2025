@@ -1,5 +1,5 @@
 // ============================
-// Example 0 Template: LED + Serial + Serial0 UART
+// Example 0 Template: LED + Serial + Serial0 UART (using write)
 // ============================
 
 #define LED_BUILTIN 2
@@ -15,7 +15,7 @@ void setup() {
   Serial0.begin(/* TODO: baud rate */);
 
   Serial.println("Setup complete");
-  Serial0.println("Setup complete");
+  Serial0.println("Setup complete");  // Can also use write
 }
 
 void loop() {
@@ -33,11 +33,12 @@ void loop() {
   Serial.println(/* TODO: message to print */);
 
   // ============================
-  // 3. Send message over Serial0 (UART)
+  // 3. Send message over Serial0 using write
   // ============================
-  Serial0.print(/* TODO: start marker, e.g., '$' */);
-  Serial0.print(/* TODO: message content */);
-  Serial0.println(/* TODO: end marker, e.g., '#' */);
+  Serial0.write(/* TODO: start marker, e.g., 0xAA */);
+  Serial0.write(/* TODO: message content byte, e.g., 0x01 */);
+  Serial0.write(/* TODO: message content byte, e.g., 0x02 */);
+  Serial0.write(/* TODO: end marker, e.g., 0xEE */);
 
   // ============================
   // 4. Optional delay before next loop
