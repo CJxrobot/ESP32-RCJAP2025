@@ -32,16 +32,16 @@ void loop() {
     lastMicros = now;
 
     // Step 7: Read all 3 sensors (active LOW → invert with ! )
-    ir_values[0] = !digitalRead(/* TODO: IR1_PIN */);
-    ir_values[1] = !digitalRead(/* TODO: IR2_PIN */);
-    ir_values[2] = !digitalRead(/* TODO: IR3_PIN */);
+    ir_values[0] = digitalRead(/* TODO: IR1_PIN */);
+    ir_values[1] = digitalRead(/* TODO: IR2_PIN */);
+    ir_values[2] = digitalRead(/* TODO: IR3_PIN */);
 
     // Step 8: Print results
     Serial.print("IR1: ");
     Serial.print(/* TODO: first value */);
-    Serial.print(" | IR2: ");
+    Serial.print(",IR2: ");
     Serial.print(/* TODO: second value */);
-    Serial.print(" | IR3: ");
+    Serial.print(",IR3: ");
     Serial.println(/* TODO: third value */);
   }
 }
