@@ -64,12 +64,13 @@ void loop() {
 
 ```cpp
 // Example: Find min value in an array
-// Exercise: Find max value in the array
+// Exercise: Find max or min value in the array
 #define SENSOR_COUNT 3
 
 int values[SENSOR_COUNT] = {5, 9, 3};
 int minVal = 32678;
 int minIndex = 0;
+bool max_min = ture;
 //Todo: create to variable for storing min value and index of min value
 
 void setup() {
@@ -78,6 +79,7 @@ void setup() {
 }
 
 void loop() {
+  //Todo: using if-else and boolean variable max_min->if "max_min" == ture, find max, otherwise find min
   for (int i = 1; i < SENSOR_COUNT; i++) {
     if (values[i] < minVal) {
       minVal = values[i];
