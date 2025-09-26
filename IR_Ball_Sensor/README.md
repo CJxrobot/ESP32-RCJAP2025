@@ -114,9 +114,6 @@ void loop() {
 ## **Example 4: Bitwise Operations - 10 mins**
 
 ```cpp
-// Example: Combine two 4-bit numbers into one byte
-// Exercise: rewrite the code, combine upper 4 bits = strength, lower 4 bits = index
-
 uint8_t strength = 9;  // 0-15
 uint8_t index = 2;     // 0-15
 uint8_t packet;
@@ -125,15 +122,20 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Bitwise Example Started");
 
-  packet = (0xFF << 4) | (index);
-  //Todo: right shift the variable "strength" with 4 bits, keep the lower 4 bits of the variable "index", and remove, and combine them into 8 bits data called "packet"
+  packet = (strength << 4) | (index & 0x0F);
+  // TODO: right shift the variable "strength" with 4 bits, 
+  // keep the lower 4 bits of the variable "index", 
+  // and combine them into 8 bits data called "packet"
   
-  Serial.print("Packet byte: 0x"); Serial.println(packet, HEX);
+  Serial.print("Packet byte: 0x"); 
+  Serial.println(packet, HEX);
 }
 
 void loop() {
   // Nothing here
+  ;
 }
+
 ```
 
 **Purpose:** Learn how to pack two 4-bit numbers into a single byte using bitwise operators.
