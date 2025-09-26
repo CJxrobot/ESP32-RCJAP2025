@@ -2,9 +2,8 @@
 
 ```cpp
 // Example: Using #define to create constants
-
-#define LED_PIN 2       // Define LED pin
-#define BLINK_DELAY 500 // milliseconds
+// Exercise, define LED_PIN as pin 13 and blink at every 100ms
+#define DELAY 500 // milliseconds
 
 void setup() {
   pinMode(LED_PIN, OUTPUT);
@@ -13,13 +12,10 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_PIN, HIGH);
   Serial.println("LED ON");
-  delay(BLINK_DELAY);
-
-  digitalWrite(LED_PIN, LOW);
+  delay(DELAY);
   Serial.println("LED OFF");
-  delay(BLINK_DELAY);
+  delay(DELAY);
 }
 ```
 
@@ -76,8 +72,6 @@ void setup() {
 }
 
 void loop() {
-  maxVal = values[0];
-  maxIndex = 0;
   for (int i = 1; i < SENSOR_COUNT; i++) {
     if (values[i] > maxVal) {
       maxVal = values[i];
