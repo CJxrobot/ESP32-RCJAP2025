@@ -63,32 +63,32 @@ void loop() {
 ## **Example 3: Find Maximum and Minimum - 20 mins**
 
 ```cpp
-// Example: Find max value in an array
-// Exercise: Find minimum value in the array
+// Example: Find min value in an array
+// Exercise: Find max value in the array
 #define SENSOR_COUNT 3
 
 int values[SENSOR_COUNT] = {5, 9, 3};
-int maxVal = 0;
-int maxIndex = 0;
+int minVal = 32678;
+int minIndex = 0;
 //Todo: create to variable for storing min value and index of min value
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("Find Max Example Started");
+  Serial.println("Example Started");
 }
 
 void loop() {
   for (int i = 1; i < SENSOR_COUNT; i++) {
-    if (values[i] > maxVal) {
-      maxVal = values[i];
-      maxIndex = i;
+    if (values[i] < minVal) {
+      minVal = values[i];
+      minIndex = i;
     }
   }
 
-  Serial.print("Max value: "); Serial.print(maxVal);
+  Serial.print("Min value: "); Serial.print(maxVal);
   Serial.print(" at index "); Serial.println(maxIndex);
 
-  //Todo: Print the minimum value and corresponding index as above
+  //Todo: Print the maximum value and corresponding index as above
 
   delay(1000);
 }
