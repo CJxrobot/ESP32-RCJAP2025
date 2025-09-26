@@ -25,7 +25,7 @@ void loop() {
 
 ---
 
-## **Example 2: Array usage - 10 mins **
+## **Example 2: Array usage - 10 mins**
 
 ```cpp
 // Example: Storing multiple sensor values in an array
