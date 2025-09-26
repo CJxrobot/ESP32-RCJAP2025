@@ -6,14 +6,16 @@
 #define DELAY 500 // milliseconds
 
 void setup() {
-  pinMode(LED_PIN, OUTPUT);
+  //Todo: LED pin as output
   Serial.begin(115200);
   Serial.println("Define Example Started");
 }
 
 void loop() {
+  //Todo: LED pin turn on(high)
   Serial.println("LED ON");
   delay(DELAY);
+  //Todo: LED pin turn off(low)
   Serial.println("LED OFF");
   delay(DELAY);
 }
