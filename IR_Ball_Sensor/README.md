@@ -60,7 +60,7 @@ void loop() {
 
 ---
 
-## **Example 3: Find Maximum**
+## **Example 3: Find Maximum and Minimum**
 
 ```cpp
 // Example: Find max value in an array
@@ -86,6 +86,8 @@ void loop() {
 
   Serial.print("Max value: "); Serial.print(maxVal);
   Serial.print(" at index "); Serial.println(maxIndex);
+
+  //Todo: Print the minimum value and corresponding index as above
 
   delay(1000);
 }
