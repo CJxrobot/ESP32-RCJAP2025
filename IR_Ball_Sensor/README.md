@@ -68,17 +68,17 @@ void loop() {
 #define SENSOR_COUNT 3
 
 int values[SENSOR_COUNT] = {5, 9, 3};
-bool find_min = ture;
+bool find_min = true;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Example Started");
 }
 
-int findmin(){
-  int minVal = 32678;
+int findmin() {
+  int minVal = 32767;   // fixed typo (32678 → 32767, safe large number)
   int minIndex = 0;
-  for (int i = 1; i < SENSOR_COUNT; i++) {
+  for (int i = 0; i < SENSOR_COUNT; i++) {   // fixed: start from 0
     if (values[i] < minVal) {
       minVal = values[i];
       minIndex = i;
@@ -87,15 +87,24 @@ int findmin(){
   return minIndex;
 }
 
-int findmax(){
-  // write a function to find maximum value in array.
+int findmax() {
+  // TODO: write a function to find maximum value in array.
+  ;
 }
 
 void loop() {
-  Serial.print("Min value:", values[findmin()]); Serial.println(", Min index:", findmin());
-  //Todo: use if-else and boolean variable find_min->if "find_min" == ture, find min value, otherwise find max value
+  // fixed syntax: Serial.print doesn’t accept multiple params
+  Serial.print("Min value: ");
+  Serial.print(values[findmin()]);
+  Serial.print(", Min index: ");
+  Serial.println(findmin());
+
+  // Todo: use if-else and boolean variable find_min
+  // if "find_min" == true, find min value, otherwise find max value
+
   delay(1000);
 }
+
 ```
 
 **Purpose:** Learn how to scan an array to find the maximum / minimum value and its index using function.
