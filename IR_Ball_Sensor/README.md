@@ -37,9 +37,12 @@ int sensorValues[SENSOR_COUNT];
 
 void setup() {
   Serial.begin(115200);
+  //Reset all sensor values to 0
   for (int i = 0; i < SENSOR_COUNT; i++) {
-    pinMode(sensorPins[i], INPUT);
+    sensorValues[i] = 0;
   }
+  //Todo: set all pin mode to input mode
+  
   Serial.println("Array Example Started");
 }
 
