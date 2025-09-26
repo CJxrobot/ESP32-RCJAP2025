@@ -1,5 +1,3 @@
-Ah! I understand — you want **separate, independent examples for each concept** that students can compile and test individually, not just the full dual-core template. Let’s make them clearly:
-
 ---
 
 ## **Example 1: `#define` usage**
