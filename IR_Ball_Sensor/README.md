@@ -68,35 +68,37 @@ void loop() {
 #define SENSOR_COUNT 3
 
 int values[SENSOR_COUNT] = {5, 9, 3};
-int minVal = 32678;
-int minIndex = 0;
-bool max_min = ture;
-//Todo: create to variable for storing min value and index of min value
+bool find_min = ture;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Example Started");
 }
 
-void loop() {
-  //Todo: using if-else and boolean variable max_min->if "max_min" == ture, find max, otherwise find min
+int findmin(){
+  int minVal = 32678;
+  int minIndex = 0;
   for (int i = 1; i < SENSOR_COUNT; i++) {
     if (values[i] < minVal) {
       minVal = values[i];
       minIndex = i;
     }
   }
+  return minIndex;
+}
 
-  Serial.print("Min value: "); Serial.print(maxVal);
-  Serial.print(" at index "); Serial.println(maxIndex);
+int findmax(){
+  // write a function to find maximum value in array.
+}
 
-  //Todo: Print the maximum value and corresponding index as above
-
+void loop() {
+  Serial.print("Min value:", values[findmin()]); Serial.println(", Min index:", findmin());
+  //Todo: use if-else and boolean variable find_min->if "find_min" == ture, find min value, otherwise find max value
   delay(1000);
 }
 ```
 
-**Purpose:** Learn how to scan an array to find the maximum value and its index.
+**Purpose:** Learn how to scan an array to find the maximum / minimum value and its index using function.
 
 ---
 
@@ -129,7 +131,7 @@ void loop() {
 
 ---
 
-## **Example 5: UART Serial0 send - 20 mins**
+## **Example 5: UART Serial0 send - 15 mins**
 
 ```cpp
 // Example: Send formatted data via Serial0
