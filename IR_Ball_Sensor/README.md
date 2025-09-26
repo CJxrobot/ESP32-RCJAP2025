@@ -148,7 +148,7 @@ void setup() {
   // Calculate checksum (here simple sum of data)
   checksum = data;
 
-  //Todo: send "data" after sending two HEADER
+  //Todo: send "data" after sending HEADER "two times"
   Serial0.write(checksum);
   Serial0.write(END_BYTE);
 
