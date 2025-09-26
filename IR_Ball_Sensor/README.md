@@ -50,7 +50,7 @@ void loop() {
   for (int i = 0; i < SENSOR_COUNT; i++) {
     sensorValues[i] = digitalRead(sensorPins[i]);
     Serial.print("Sensor "); Serial.print(i);
-    Serial.print(": "); Serial.println(sensorValues[i]);
+    //Todo:Print all sensorValues by using Serial.print();
   }
   delay(500);
 }
