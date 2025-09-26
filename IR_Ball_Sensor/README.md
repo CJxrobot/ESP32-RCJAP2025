@@ -1,5 +1,3 @@
----
-
 ## **Example 1: `#define` usage**
 
 ```cpp
