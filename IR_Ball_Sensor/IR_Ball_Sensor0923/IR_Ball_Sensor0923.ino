@@ -102,9 +102,9 @@ void Task2code(void *parameter) {
     if (sum > max_sum) {
       max_sum = sum;
     }
-    ball_distance = (sum / max_sum) * 255;
-    if(ball_distance > 255){
-      ball_distance = 255;
+    ball_distance = (sum / max_sum) * 16;
+    if(ball_distance > 16){
+      ball_distance = 16;
     }
 
     if(sum != 0){
