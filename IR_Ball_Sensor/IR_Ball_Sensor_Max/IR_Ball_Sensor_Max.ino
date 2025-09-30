@@ -45,7 +45,6 @@ void /* TODO: function name */(void *parameter) {
   while (1) {
     IR_reading();
     read_done_flag = true;
-    vTaskDelay(/* TODO: delay */);
   }
 }
 
@@ -63,29 +62,22 @@ void /* TODO: function name */(void *parameter) {
       }
     }
 
-    uint16_t max_degree = /* TODO: get degree */;
-    uint16_t max_value  = /* TODO: get weight */;
+    uint8_t max_value  = /* TODO: get weight */;
 
     // Step 2: Debug print
-    Serial.print("Max = ");
-    Serial.print(/* TODO: value */);
-    Serial.print(" @ degree ");
-    Serial.println(/* TODO: degree */);
-
+    if(/*TODO: if Serail is wokring, show debugging data*/){
+      Serial.print("Max = ");
+      Serial.print(/* TODO: value */);
+      Serial.print(" @ degree ");
+      Serial.println(/* TODO: degree */);
+      delay(100);
+    }
     // Step 3: Serial0 sending (with checksum)
     uint8_t checksum = 0;
     uint32_t send_data = /* TODO: pack data like in full example */;
     Serial0.write(0xAA);
-    Serial0.write(0xAA);
-    for (int i = 0; i < 4; i++) {
-      uint8_t temp = (send_data >> (i * 8)) & 0xFF;
-      Serial0.write(temp);
-      checksum += temp;
-    }
-    Serial0.write(checksum & 0xFF);
+    Serial0.write(send_data);
     Serial0.write(0xEE);
-
-    vTaskDelay(/* TODO: delay */);
   }
 }
 
