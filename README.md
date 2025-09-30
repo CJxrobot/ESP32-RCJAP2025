@@ -176,3 +176,4 @@ void loop() {
 ```
 
 **Purpose:** Learn how to send a simple data packet over `Serial0` with header, checksum, and end byte.
+
