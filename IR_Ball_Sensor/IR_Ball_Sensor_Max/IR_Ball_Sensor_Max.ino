@@ -110,11 +110,12 @@ void Task2code(void *parameter) {
         max_index = i;
       }
     }
-    if(ir_weight[max_index] > max_value){
-      max_value = ir_weight[max_index];
+    uint8_t dis = 0;
+    if (max_value > 0) {
+      dis = (uint8_t)(16.0 * ir_weight[max_index] / (float)max_value);
     }
-    uint8_t dis  = 16 * (ir_weight[max_index] / max_value);
-    uint32_t send_data =  (dis&0xF0 >> 4) | (max_index)&0x0F;
+    // Step 3: pack and send with checksum
+    uint8_t send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
     Serial0.write(0xAA);
     Serial0.write(send_data);
     Serial0.write(0xEE);
@@ -141,3 +142,4 @@ void Task2code(void *parameter) {
 void loop() {
   // Empty
 }
+
