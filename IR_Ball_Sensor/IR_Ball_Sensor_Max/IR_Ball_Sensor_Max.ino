@@ -1,5 +1,4 @@
 // Practice Template: Dual Core IR Sensor Max Finder + Serial0
-// Students: Fill in the TODO parts
 //Port: 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15
 //Pin : 05 38 07 08 10 11 39 13 15 41 17 42 35 01 36 03
 //{5,38,7,8,10,11,39,13,15,41,17,42,35,01,36,03}
@@ -69,24 +68,8 @@ void setup() {
   for (uint8_t i = 0; i < IR_Port_Count; i++) {
     pinMode(ir_pins[i], INPUT);
   }
-
-  xTaskCreatePinnedToCore(
-                    Task1code,   /* Task function. */
-                    "Task1",     /* name of task. */
-                    10000,       /* Stack size of task */
-                    NULL,        /* parameter of the task */
-                    1,           /* priority of the task */
-                    &Task1,      /* Task handle to keep track of created task */
-                    0);          /* pin task to core 0 */                  
-  //create a task that will be executed in the Task2code() function, with priority 1 and executed on core 1
-  xTaskCreatePinnedToCore(
-                    Task2code,   /* Task function. */
-                    "Task2",     /* name of task. */
-                    10000,       /* Stack size of task */
-                    NULL,        /* parameter of the task */
-                    1,           /* priority of the task */
-                    &Task2,      /* Task handle to keep track of created task */
-                    1);          /* pin task to core 1 */
+  xTaskCreatePinnedToCore(Task1code, "Task1", 10000, NULL, 1, &Task1, 0);
+  xTaskCreatePinnedToCore(Task2code, "Task2", 10000, NULL, 1, &Task2, 1);
 }
 
 
