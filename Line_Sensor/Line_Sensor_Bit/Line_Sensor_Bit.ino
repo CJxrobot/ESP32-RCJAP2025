@@ -138,7 +138,7 @@ void Task2code(void * parameter) {
           checksum &= 0xFF;
           Serial0.write(checksum);
           Serial0.write(0xEE);
-          if (Serial.available() > 0) {
+          if (Serial.available()) {
             Serial.print("ls_state");
             Serial.println(data, BIN);
             delay(100);
