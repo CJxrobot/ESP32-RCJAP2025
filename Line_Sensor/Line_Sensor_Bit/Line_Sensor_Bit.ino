@@ -153,6 +153,7 @@ void Task2code(void * parameter) {
             Serial.println(data, BIN);
             delay(100);
           }
+          rgbLEDWrite(0,125,0);
         }
         break;
     }
