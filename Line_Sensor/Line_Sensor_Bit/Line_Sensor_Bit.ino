@@ -35,8 +35,7 @@ uint32_t raw_data();
 
 void rgbLEDWrite(uint8_t red_val, uint8_t green_val, uint8_t blue_val) {
   rmt_data_t led_data[24];
-  uint8_t pin = 38;
-  rmtInit(pin, RMT_TX_MODE, RMT_MEM_NUM_BLOCKS_1, 10000000);
+  rmtInit(38, RMT_TX_MODE, RMT_MEM_NUM_BLOCKS_1, 10000000);
   // default WS2812B color order is G, R, B
   int color[3] = {green_val, red_val, blue_val};
   int i = 0;
@@ -58,7 +57,7 @@ void rgbLEDWrite(uint8_t red_val, uint8_t green_val, uint8_t blue_val) {
       i++;
     }
   }
-  rmtWrite(pin, led_data, RMT_SYMBOLS_OF(led_data), RMT_WAIT_FOR_EVER);
+  rmtWrite(38, led_data, RMT_SYMBOLS_OF(led_data), RMT_WAIT_FOR_EVER);
 }
 
 // State machine for calibration
