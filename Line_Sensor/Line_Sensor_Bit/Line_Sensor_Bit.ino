@@ -117,27 +117,37 @@ void Task2code(void * parameter) {
   while(true){
     switch(currentState){
       case CALIBRATION_START:
+        rgbLEDWrite(125,0,125);
         scanning();       // Update max/min
         break;
       case CALIBRATION_END:
         save_avg();       // Save averages to EEPROM
         currentState = OPERATES_NORMALLY;
+        rgbLEDWrite(0,125,0);
+        delay(500);
+        rgbLEDWrite(0,0,0);
+        delay(500);
+        rgbLEDWrite(0,125,0);
+        delay(500);
         break;
       case OPERATES_NORMALLY:
         // Send raw data over Serial0
         if(read_done_flag){
           uint32_t data = raw_data();
           uint8_t checksum = 0;
-          Serial0.write(0xAA);
-          Serial0.write(0xAA);
-          for(uint8_t i = 0; i < 4; i++){
-            uint8_t temp = (data >> (i*8)) & 0xFF;
-            Serial0.write(temp);
-            checksum += temp;
+          if(data){
+            rgbLEDWrite(125,0,0);
+            Serial0.write(0xAA);
+            Serial0.write(0xAA);
+            for(uint8_t i = 0; i < 4; i++){
+              uint8_t temp = (data >> (i*8)) & 0xFF;
+              Serial0.write(temp);
+              checksum += temp;
+            }
+            checksum &= 0xFF;
+            Serial0.write(checksum);
+            Serial0.write(0xEE);
           }
-          checksum &= 0xFF;
-          Serial0.write(checksum);
-          Serial0.write(0xEE);
           if (Serial.available()) {
             Serial.print("ls_state");
             Serial.println(data, BIN);
