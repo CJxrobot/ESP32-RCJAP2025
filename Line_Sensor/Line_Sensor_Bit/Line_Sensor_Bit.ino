@@ -2,15 +2,22 @@
 #include <math.h>
 #include <Arduino.h>
 
+//Port: 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17
+//Pin : 05 06 07 08 09 10 11 12 13 14 15 16 17 18 01 02 03 04
+//{5,6,7,8,9,10,11,12,13,14,15,16,17,18,1,2,3,4};
 #define LS_count 18
 #define CAL_START_Command 0xAA
 #define CAL_END_Command   0xEE
 
-bool read_done_flag = false;
+TaskHandle_t Task1;
+TaskHandle_t Task2;
+
 uint16_t max_ls[LS_count]; 
 uint16_t avg_ls[LS_count];
 uint16_t min_ls[LS_count];
 uint16_t result[LS_count];
+
+volatile bool read_done_flag = false;
 
 uint8_t pin_config[LS_count] = {5,6,7,8,9,10,11,12,13,14,15,16,17,18,1,2,3,4};
 Preferences memory;
@@ -25,6 +32,33 @@ void Task2code(void * parameter);
 void scanning();
 void save_avg();
 uint32_t raw_data();
+
+void rgbLEDWrite(uint8_t red_val, uint8_t green_val, uint8_t blue_val) {
+  rmt_data_t led_data[24];
+  rmtInit(38, RMT_TX_MODE, RMT_MEM_NUM_BLOCKS_1, 10000000);
+  // default WS2812B color order is G, R, B
+  int color[3] = {green_val, red_val, blue_val};
+  int i = 0;
+  for (int col = 0; col < 3; col++) {
+    for (int bit = 0; bit < 8; bit++) {
+      if ((color[col] & (1 << (7 - bit)))) {
+        // HIGH bit
+        led_data[i].level0 = 1;     // T1H
+        led_data[i].duration0 = 8;  // 0.8us
+        led_data[i].level1 = 0;     // T1L
+        led_data[i].duration1 = 4;  // 0.4us
+      } else {
+        // LOW bit
+        led_data[i].level0 = 1;     // T0H
+        led_data[i].duration0 = 4;  // 0.4us
+        led_data[i].level1 = 0;     // T0L
+        led_data[i].duration1 = 8;  // 0.8us
+      }
+      i++;
+    }
+  }
+  rmtWrite(38, led_data, RMT_SYMBOLS_OF(led_data), RMT_WAIT_FOR_EVER);
+}
 
 // State machine for calibration
 enum State {
@@ -44,7 +78,6 @@ void setup() {
         max_ls[i] = 0;
         min_ls[i] = 4095;
     }
-
     // Preferences init
     memory.begin("LS_avg", false);
     memory.getBytes("LS_avg", avg_ls, memory.getBytesLength("LS_avg"));
@@ -71,8 +104,12 @@ void Task1code(void * parameter) {
         if(command == CAL_START_Command) currentState = CALIBRATION_START;
         if(command == CAL_END_Command)   currentState = CALIBRATION_END;
     }
-
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    if (Serial.available() > 0) {
+        uint8_t command = Serial.read();
+        if(command == CAL_START_Command) currentState = CALIBRATION_START;
+        if(command == CAL_END_Command)   currentState = CALIBRATION_END;
+    }
+    vTaskDelay(1 / portTICK_PERIOD_MS);
   }
 }
 
@@ -80,31 +117,47 @@ void Task2code(void * parameter) {
   while(true){
     switch(currentState){
       case CALIBRATION_START:
+        rgbLEDWrite(125,0,125);
         scanning();       // Update max/min
         break;
       case CALIBRATION_END:
         save_avg();       // Save averages to EEPROM
         currentState = OPERATES_NORMALLY;
+        rgbLEDWrite(0,125,0);
+        delay(500);
+        rgbLEDWrite(0,0,0);
+        delay(500);
+        rgbLEDWrite(0,125,0);
+        delay(500);
         break;
       case OPERATES_NORMALLY:
         // Send raw data over Serial0
         if(read_done_flag){
           uint32_t data = raw_data();
           uint8_t checksum = 0;
-          Serial0.write(0xAA);
-          Serial0.write(0xAA);
-          for(uint8_t i = 0; i < 4; i++){
-            uint8_t temp = (data >> (i*8)) & 0xFF;
-            Serial0.write(temp);
-            checksum += temp;
+          if(data){
+            rgbLEDWrite(125,0,0);
+            Serial0.write(0xAA);
+            Serial0.write(0xAA);
+            for(uint8_t i = 0; i < 4; i++){
+              uint8_t temp = (data >> (i*8)) & 0xFF;
+              Serial0.write(temp);
+              checksum += temp;
+            }
+            checksum &= 0xFF;
+            Serial0.write(checksum);
+            Serial0.write(0xEE);
           }
-          checksum &= 0xFF;
-          Serial0.write(checksum);
-          Serial0.write(0xEE);
+          if (Serial.available()) {
+            Serial.print("ls_state");
+            Serial.println(data, BIN);
+            delay(100);
+          }
+          rgbLEDWrite(0,125,0);
         }
         break;
     }
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    vTaskDelay(1 / portTICK_PERIOD_MS);
   }
 }
 
@@ -139,6 +192,6 @@ uint32_t raw_data(){
   return ls_state;
 }
 
-void loop(){
-  // Tasks handle everything
+void loop() {
+  // Empty
 }
