@@ -78,7 +78,6 @@ void setup() {
         max_ls[i] = 0;
         min_ls[i] = 4095;
     }
-
     // Preferences init
     memory.begin("LS_avg", false);
     memory.getBytes("LS_avg", avg_ls, memory.getBytesLength("LS_avg"));
@@ -106,7 +105,9 @@ void Task1code(void * parameter) {
         if(command == CAL_END_Command)   currentState = CALIBRATION_END;
     }
     if (Serial.available() > 0) {
-    
+        uint8_t command = Serial.read();
+        if(command == CAL_START_Command) currentState = CALIBRATION_START;
+        if(command == CAL_END_Command)   currentState = CALIBRATION_END;
     }
     vTaskDelay(1 / portTICK_PERIOD_MS);
   }
