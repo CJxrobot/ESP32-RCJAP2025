@@ -56,6 +56,18 @@ bool IR_reading() {
       }
     }
   }
+   // Step 1: Find maximum
+  int max_index = 0;
+  uint8_t dis = 0;
+  for (uint8_t i = 0; i < IR_Port_Count; i++) {
+    if (ir_weight[i] > ir_weight[max_index]) {
+      max_index = i;
+    }
+    if(ir_weight[i] != 0){
+      dis++;
+    }
+  }
+  dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
   return true;
 }
 
@@ -82,26 +94,13 @@ void Task1code(void *parameter) {
 // ============ Task2: Max + Serial0 ============
 void Task2code(void *parameter) {
   while (1) {
-    while (!read_done_flag);
-    read_done_flag = false;
-
-    // Step 1: Find maximum
-    int max_index = 0;
-    uint8_t dis = 0;
-    for (uint8_t i = 0; i < IR_Port_Count; i++) {
-      if (ir_weight[i] > ir_weight[max_index]) {
-        max_index = i;
-      }
-      if(ir_weight[i] != 0){
-        dis++;
-      }
-    }
-    dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
-    // Step 3: pack and send with checksum
+    while(!read_done_flag);
     uint8_t send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
-    Serial0.write(0xAA);
-    Serial0.write(send_data);
-    Serial0.write(0xEE);
+    if(Serial0.avaible() && Serial0.read() == 0xBB){
+      Serial0.write(0xAA);
+      Serial0.write(send_data);
+      Serial0.write(0xEE);
+    }
     // Step 2: Debug print
     if(Serial.available()){
       rgbLEDWrite(125,0,125);
@@ -110,21 +109,14 @@ void Task2code(void *parameter) {
       Serial.print(" @ distance ");
       Serial.println(dis);
       delay(100);
-    }
-    if(max_index == 3 || max_index == 4){
-      rgbLEDWrite(0,125,0);
-    }
-    else{
-      rgbLEDWrite(125,0,0);
-    }
-    // Step 3: Serial0 sending (with checksum)
-    
+    }    
   }
 }
 
 void loop() {
   // Empty
 }
+
 
 
 
