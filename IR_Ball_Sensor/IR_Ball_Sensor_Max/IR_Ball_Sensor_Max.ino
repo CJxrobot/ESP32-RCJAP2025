@@ -69,10 +69,9 @@ void Task1code(void *parameter) {
   uint64_t start = micros();
   while (micros() - start < 833) {
     for (uint8_t i = 0; i < IR_Port_Count; i++) {
-          uint8_t pin_state = digitalRead(ir_pins[i]);
-          if (!pin_state) {
+        uint8_t pin_state = digitalRead(ir_pins[i]);//gpio_get_level()
+        if (!pin_state) {
             ir_weight[i]++;
-          }
         }
     }
     // Step 1: Find maximum
@@ -88,19 +87,18 @@ void Task1code(void *parameter) {
     }
     dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
     send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
+    //vTaskDelay(1 / portTICK_PERIOD_MS); // tiny delay to yield CPU
   }
 }
 
 // ============ Task2: Max + Serial0 ============
 void Task2code(void *parameter) {
-
   while (1) {
     if(Serial0.avaible() && Serial0.read() == 0xBB){
-      Serial0.write(0xAA);
-      Serial0.write(send_data);
-      Serial0.write(0xEE);
+        Serial0.write(0xAA);
+        Serial0.write(send_data);
+        Serial0.write(0xEE);
     }
-    // Step 2: Debug print
     if(Serial.available()){
       rgbLEDWrite(125,0,125);
       Serial.print("Max = ");
@@ -108,13 +106,15 @@ void Task2code(void *parameter) {
       Serial.print(" @ distance ");
       Serial.println(dis);
       delay(100);
-    }    
+    }
+    //vTaskDelay(1 / portTICK_PERIOD_MS); // tiny delay to yield CPU
   }
 }
 
 void loop() {
   // Empty
 }
+
 
 
 
