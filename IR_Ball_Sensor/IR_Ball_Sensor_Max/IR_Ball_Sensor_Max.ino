@@ -12,7 +12,7 @@ uint8_t ir_pins[IR_Port_Count]  = {5,7,8,10,11,13,15,17,1,3};
 uint16_t ir_weight[IR_Port_Count];
 
 volatile bool read_done_flag = false;
-volatile uint16_t max_value = 0;
+uint8_t send_data = 0x00;
 
 void rgbLEDWrite(uint8_t red_val, uint8_t green_val, uint8_t blue_val) {
   rmt_data_t led_data[24];
@@ -43,32 +43,7 @@ void rgbLEDWrite(uint8_t red_val, uint8_t green_val, uint8_t blue_val) {
 
 // ============ IR Reading ============
 bool IR_reading() {
-  for (uint8_t i = 0; i < IR_Port_Count; i++) {
-    ir_weight[i] = 0;
-  }
 
-  uint64_t start = micros();
-  while (micros() - start < 833) {
-    for (uint8_t i = 0; i < IR_Port_Count; i++) {
-      uint8_t pin_state = digitalRead(ir_pins[i]);
-      if (!pin_state) {
-        ir_weight[i]++;
-      }
-    }
-  }
-   // Step 1: Find maximum
-  int max_index = 0;
-  uint8_t dis = 0;
-  for (uint8_t i = 0; i < IR_Port_Count; i++) {
-    if (ir_weight[i] > ir_weight[max_index]) {
-      max_index = i;
-    }
-    if(ir_weight[i] != 0){
-      dis++;
-    }
-  }
-  dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
-  return true;
 }
 
 // ============ Setup ============
@@ -87,15 +62,39 @@ void setup() {
 // ============ Task1: IR Reading ============
 void Task1code(void *parameter) {
   while (1) {
-    read_done_flag = IR_reading();
+      for (uint8_t i = 0; i < IR_Port_Count; i++) {
+    ir_weight[i] = 0;
+  }
+
+  uint64_t start = micros();
+  while (micros() - start < 833) {
+    for (uint8_t i = 0; i < IR_Port_Count; i++) {
+          uint8_t pin_state = digitalRead(ir_pins[i]);
+          if (!pin_state) {
+            ir_weight[i]++;
+          }
+        }
+    }
+    // Step 1: Find maximum
+    int max_index = 0;
+    uint8_t dis = 0;
+    for (uint8_t i = 0; i < IR_Port_Count; i++) {
+        if (ir_weight[i] > ir_weight[max_index]) {
+            max_index = i;
+        }
+        if(ir_weight[i] != 0){
+            dis++;
+        }
+    }
+    dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
+    send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
   }
 }
 
 // ============ Task2: Max + Serial0 ============
 void Task2code(void *parameter) {
+
   while (1) {
-    while(!read_done_flag);
-    uint8_t send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
     if(Serial0.avaible() && Serial0.read() == 0xBB){
       Serial0.write(0xAA);
       Serial0.write(send_data);
@@ -116,6 +115,7 @@ void Task2code(void *parameter) {
 void loop() {
   // Empty
 }
+
 
 
 
