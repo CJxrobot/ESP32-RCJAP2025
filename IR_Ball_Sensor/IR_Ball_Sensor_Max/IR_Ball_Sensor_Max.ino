@@ -87,15 +87,16 @@ void Task2code(void *parameter) {
 
     // Step 1: Find maximum
     int max_index = 0;
+    uint8_t dis = 0;
     for (uint8_t i = 0; i < IR_Port_Count; i++) {
       if (ir_weight[i] > ir_weight[max_index]) {
         max_index = i;
       }
+      if(ir_weight[i] != 0){
+        dis++;
+      }
     }
-    uint8_t dis = 0;
-    if (max_value > 0) {
-      dis = (uint8_t)(16.0 * ir_weight[max_index] / (float)max_value);
-    }
+    dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
     // Step 3: pack and send with checksum
     uint8_t send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
     Serial0.write(0xAA);
@@ -124,4 +125,6 @@ void Task2code(void *parameter) {
 void loop() {
   // Empty
 }
+
+
 
