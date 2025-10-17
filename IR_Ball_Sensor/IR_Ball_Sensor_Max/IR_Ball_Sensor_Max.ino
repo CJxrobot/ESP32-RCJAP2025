@@ -62,7 +62,7 @@ bool IR_reading() {
 // ============ Setup ============
 void setup() {
   Serial.begin(115200);
-  Serial0.begin(115200);
+  Serial0.begin(921600);
   rgbLEDWrite(125,0,0);
   for (uint8_t i = 0; i < IR_Port_Count; i++) {
     pinMode(ir_pins[i], INPUT);
@@ -125,6 +125,7 @@ void Task2code(void *parameter) {
 void loop() {
   // Empty
 }
+
 
 
 
