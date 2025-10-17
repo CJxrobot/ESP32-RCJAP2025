@@ -96,7 +96,7 @@ void Task2code(void *parameter) {
         dis++;
       }
     }
-    
+    dis = (IR_Port_Count + 1) - dis ? (dis != 0) : 0;
     // Step 3: pack and send with checksum
     uint8_t send_data = ((dis & 0xF0) >> 4) | (max_index & 0x0F);
     Serial0.write(0xAA);
@@ -125,5 +125,6 @@ void Task2code(void *parameter) {
 void loop() {
   // Empty
 }
+
 
 
