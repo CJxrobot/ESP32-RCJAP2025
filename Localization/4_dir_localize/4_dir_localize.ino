@@ -88,8 +88,8 @@ void readSerial(HardwareSerial &serial, int id) {
 // Localization logic
 // --------------------------------------------------------
 void computeLocalization() {
-  const float FIELD_W = 2400.0; // mm
-  const float FIELD_H = 1800.0; // mm
+  const float FIELD_W = 1800.0; // mm
+  const float FIELD_H = 2400.0; // mm
 
   float front = sensors[0].valid ? sensors[0].distance : NAN;
   float right = sensors[1].valid ? sensors[1].distance : NAN;
